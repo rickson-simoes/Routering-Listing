@@ -12,11 +12,11 @@ import EventService from "@/services/EventService.js";
 export default {
   name: "EventList",
   components: {
-    EventCard,
+    EventCard
   },
   data() {
     return {
-      events: [],
+      events: []
     };
   },
   mounted() {
@@ -27,7 +27,7 @@ export default {
       .catch((error) => {
         console.log(error);
       });
-  },
+  }
 };
 </script>
 
