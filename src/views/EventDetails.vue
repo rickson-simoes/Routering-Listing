@@ -13,7 +13,7 @@ export default {
   props: ["id"],
   data() {
     return {
-      event: ""
+      event: "",
     };
   },
   async mounted() {
@@ -24,6 +24,6 @@ export default {
       .catch((error) => {
         console.log(error);
       });
-  }
+  },
 };
 </script>
