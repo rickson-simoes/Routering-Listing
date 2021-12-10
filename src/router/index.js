@@ -11,6 +11,7 @@ const routes = [
     path: "/about",
     name: "About",
     component: About,
+    alias: "/about-us",
   },
   {
     path: "/",
@@ -21,7 +22,7 @@ const routes = [
     },
   },
   {
-    path: "/event/:id",
+    path: "/events/:id",
     name: "EventLayout",
     props: true,
     component: EventLayout,
@@ -42,6 +43,26 @@ const routes = [
         component: EventEdit,
       },
     ],
+  },
+  // {
+  //   path: "/event/:id",
+  //   redirect: () => ({ name: "EventDetails" }),
+  //   children: [
+  //     {
+  //       path: "register",
+  //       redirect: () => ({ name: "EventRegister" }),
+  //     },
+  //     {
+  //       path: "edit",
+  //       redirect: () => ({ name: "EventEdit" }),
+  //     },
+  //   ],
+  // },
+  {
+    path: "/event/:afterEvent(.*)",
+    redirect: (to) => {
+      return { path: "/events/" + to.params.afterEvent };
+    },
   },
 ];
 
