@@ -3,8 +3,7 @@
     <h1>Events for Good</h1>
     <EventCard v-for="event in events" :key="event.id" :event="event" />
 
-    <!-- eslint-disable-next-line prettier/prettier -->
-    <nav style="display: flex; justify-content: space-around; width: 200px">
+    <nav style="display: flex; justify-content: space-between; width: 250px">
       <router-link
         :to="{ name: 'EventList', query: { page: page - 1 } }"
         rel="Previous"
@@ -13,6 +12,7 @@
         « Previous
       </router-link>
       <div v-else>« Previous</div>
+
       <span v-for="num in totalPages" :key="num">
         <router-link
           :to="{ name: 'EventList', query: { page: num } }"
@@ -24,6 +24,7 @@
 
         <div v-else>{{ num }}</div>
       </span>
+
       <router-link
         :to="{ name: 'EventList', query: { page: page + 1 } }"
         rel="Next"
