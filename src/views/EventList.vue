@@ -13,7 +13,17 @@
         « Previous
       </router-link>
       <div v-else>« Previous</div>
+      <span v-for="num in totalPages" :key="num">
+        <router-link
+          :to="{ name: 'EventList', query: { page: num } }"
+          rel="Previous"
+          v-if="page !== num"
+        >
+          {{ num }}
+        </router-link>
 
+        <div v-else>{{ num }}</div>
+      </span>
       <router-link
         :to="{ name: 'EventList', query: { page: page + 1 } }"
         rel="Next"
@@ -49,6 +59,9 @@ export default {
       const totalPages = Math.ceil(this.totalEvents / this.perPage);
 
       return this.page < totalPages;
+    },
+    totalPages() {
+      return Math.ceil(this.totalEvents / this.perPage);
     },
   },
   mounted() {
