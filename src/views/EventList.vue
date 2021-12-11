@@ -40,7 +40,8 @@
 <script>
 import EventCard from "@/components/EventCard.vue";
 import EventService from "@/services/EventService.js";
-import { watchEffect } from "vue";
+// import { watchEffect } from "vue";
+import NProgress from "nprogress";
 
 export default {
   props: ["page"],
@@ -65,22 +66,56 @@ export default {
       return Math.ceil(this.totalEvents / this.perPage);
     },
   },
-  mounted() {
-    // quando objetos reativos são usados dentro do watchEffect, essa função é executada novamente
-    watchEffect(() => {
-      this.events = null;
-      EventService.getEvents(this.perPage, this.page)
-        .then((response) => {
-          this.events = response.data;
-          this.totalEvents = response.headers["x-total-count"];
-        })
-        .catch(() => {
-          this.$router.push({
-            name: "NetworkError",
-          });
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    NProgress.start();
+    EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
+      .then((response) => {
+        next((comp) => {
+          comp.events = response.data;
+          comp.totalEvents = response.headers["x-total-count"];
         });
-    });
+      })
+      .catch(() => {
+        next({
+          name: "NetworkError",
+        });
+      })
+      .finally(() => {
+        NProgress.done();
+      });
   },
+  beforeRouteUpdate(routeTo) {
+    NProgress.start();
+    EventService.getEvents(this.perPage, parseInt(routeTo.query.page) || 1)
+      .then((response) => {
+        this.events = response.data;
+        this.totalEvents = response.headers["x-total-count"];
+      })
+      .catch(() => {
+        return {
+          name: "NetworkError",
+        };
+      })
+      .finally(() => {
+        NProgress.done();
+      });
+  },
+  // mounted() {
+  //   // quando objetos reativos são usados dentro do watchEffect, essa função é executada novamente
+  //   watchEffect(() => {
+  //     this.events = null;
+  //     EventService.getEvents(this.perPage, this.page)
+  //       .then((response) => {
+  //         this.events = response.data;
+  //         this.totalEvents = response.headers["x-total-count"];
+  //       })
+  //       .catch(() => {
+  //         this.$router.push({
+  //           name: "NetworkError",
+  //         });
+  //       });
+  //   });
+  // },
 };
 </script>
 
