@@ -70,6 +70,7 @@ const routes = [
         path: "edit",
         name: "EventEdit",
         component: EventEdit,
+        meta: { requireAuth: true },
       },
     ],
   },
@@ -114,10 +115,35 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { top: 0, behavior: "smooth" };
+    }
+  },
 });
 
-router.beforeEach(() => {
+router.beforeEach((to, from) => {
   NProgress.start();
+
+  const isAuthorized = false;
+
+  if (to.meta.requireAuth && !isAuthorized) {
+    GStore.flashMessage = "Uh oh! You're not authorized :(";
+
+    setTimeout(() => {
+      GStore.flashMessage = "";
+    }, 3000);
+
+    // se for o caso de estar dentro da aplicação, identifica a rota anterior
+    if (from.href) {
+      return false;
+    } else {
+      // se estiver vindo de outro local, redireciona para o menu principal
+      return { name: "EventList" };
+    }
+  }
 });
 
 router.afterEach(() => {
